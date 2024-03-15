@@ -1,0 +1,45 @@
+apiVersion: apps/v1 # se crean pods y tienen ip
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata: # se etiquetan los pods
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15.2-alpine
+        ports:
+        - containerPort: 5432
+        env:
+          - name: POSTGRES_PASSWORD # .env
+            valueFrom: 
+              secretKeyRef:
+                name: postgres-secrets #nombre de secrets
+                key: DB_PASSWORD
+          # - name: POSTGRES_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: postgres-secrets
+          #       key: DB_PASSWORD
+---
+apiVersion: v1
+kind: Service  # se crea un servicio
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432 # puerto exterior(cualquier puerto)
+      targetPort: 5432
+
