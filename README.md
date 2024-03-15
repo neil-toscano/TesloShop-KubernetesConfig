@@ -20,3 +20,12 @@
 ```
     kubectl apply -f backend.yml
 ```
+## revisar logs tanto para pods, services...etcm
+```
+    kubectl describe deployment.apps/backend-deployment 
+```
+
+## Para revisar el backend
+```
+    minikube service backend-service 
+```
